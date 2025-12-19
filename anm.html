@@ -157,7 +157,8 @@
 </head>
 <body>
 
-    <audio id="bgMusic" loop>
+    <!-- Asegúrate de que el archivo tu-cancion.mp3 esté en la misma carpeta que index.html en Vercel -->
+    <audio id="bgMusic" preload="auto" loop>
         <source src="tu-cancion.mp3" type="audio/mpeg">
     </audio>
 
@@ -170,7 +171,7 @@
 
     <div class="content-wrapper" id="main-card">
         <div id="page-content">
-            <h1 class="title">Bienvenida Noelia Mindiano</h1>
+            <h1 class="title">Bienvenida Noelia</h1>
             <div class="max-w-[280px] mx-auto flex flex-col items-center gap-5">
                 <input type="text" id="nameInput" placeholder="Escribe mi nombre..." 
                        class="w-full px-7 py-4 rounded-3xl text-center text-gray-700 shadow-sm border-2 border-transparent outline-none focus:border-[#ff4d6d] transition-all">
@@ -242,8 +243,23 @@
         function checkName() {
             const val = document.getElementById('nameInput').value.trim().toLowerCase();
             if (val === "alexander") {
-                if (audio) { audio.volume = 0.3; audio.play().catch(() => {}); }
-                muteBtn.style.display = "flex";
+                // Intento de reproducción con manejo de errores para Vercel
+                if (audio) { 
+                    audio.volume = 0.3; 
+                    const playPromise = audio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(_ => {
+                            // Reproducción exitosa
+                            muteBtn.style.display = "flex";
+                        }).catch(error => {
+                            // Si falla, mostramos el botón de todos modos para que el usuario pueda darle play manual
+                            console.log("Autoplay bloqueado o archivo no encontrado.");
+                            muteBtn.style.display = "flex";
+                            document.getElementById('mute-icon').innerText = "🔇";
+                            audio.muted = true;
+                        });
+                    }
+                }
                 nextPage(2);
             } else {
                 document.getElementById('errorMessage').style.display = 'block';
@@ -281,12 +297,8 @@
                     break;
                 case 2:
                     content = `
-                        <h1 class="title">Como Empezó...</h1>
-                        <p class="text-gray-600 mb-10 leading-relaxed font-medium text-lg">Bueno, mi amor, todo empezó cuando te conocí en comugamers(Gracias Comugamers), sin imaginar que con el tiempo te convertirías en todo esto que hoy significas para mí. Jamás pensé que algo tan simple terminaría siendo tan importante en mi vida.
-                            La verdad es que me siento muy feliz de haberte conocido. Poco a poco te fuiste convirtiendo en una persona muy especial y muy importante para mí, alguien que llegó sin hacer ruido y se quedó en mi corazón. Cada conversación, cada risa, cada momento compartido fue haciendo que el cariño creciera sin que me diera cuenta.
-                            Contigo aprendí que no importa el lugar ni la forma, lo que realmente importa es cómo alguien te hace sentir. Aunque todo haya empezado en un videojuego, lo que siento por ti es real, sincero y profundo. Cuando jugamos juntos no solo compartimos una partida, compartimos tiempo, confianza y emociones que valoro muchísimo.
-                            Me encanta cómo me haces sentir, cómo siempre encuentro paz, alegría y emoción cuando estoy contigo. Eres esa persona con la que quiero estar, con la que quiero jugar, hablar y compartir cada momento. Si no es contigo, simplemente no es igual.
-                            Gracias por llegar a mi vida de una forma tan inesperada y por quedarte. Gracias por ser tú, por hacerme feliz y por convertir algo tan simple en algo tan especial. Espero de corazón que sigamos creando muchos más momentos juntos, porque a tu lado todo se siente mejor.</p>
+                        <h1 class="title">Desde que llegaste...</h1>
+                        <p class="text-gray-600 mb-10 leading-relaxed font-medium text-lg">Todo en mi vida cobró un sentido diferente. Eres esa jugada perfecta, el gol de último minuto y el nivel más bonito que he superado.</p>
                         <div class="flex gap-4 justify-center">
                             <button onclick="nextPage(1)" class="btn-back px-8 py-4 rounded-full text-[11px] uppercase">Atrás</button>
                             <button onclick="nextPage(3)" class="btn-next px-10 py-4 text-white rounded-full uppercase text-[11px]">Recuerdos</button>
@@ -295,10 +307,9 @@
                     break;
                 case 3:
                     content = `
-                        <h1 class="title">Momentos Juntos...</h1>
-                        <p class="text-gray-500 mb-10 font-medium">Cada momento juntos, cada vez que jugamos, se vuelve algo muy especial para mí. Estar a tu lado se ha vuelto algo tan bonito, tan necesario. Cuando estoy contigo, no quiero nada más que eso: estar contigo, sentirte cerca.
-                            Tal vez ahora todo sea a través de un videojuego, pero como tú dices, cuando jugamos me siento más cerca de ti, y tienes razón, mi amor, yo también siento lo mismo. Desde el principio siempre buscaba la forma de jugar contigo, de pasar tiempo a tu lado, y eso me hacía muy feliz.
-                            Saber que tú también buscabas lo mismo me llena el corazón, y te lo digo porque yo también lo sentía, amor, lo sentía de verdad. Espero que esas ganas nunca se terminen. Eres la única persona con la que me entiendo, con la que siempre quiero jugar. Si no es contigo, no es con nadie… con nadie.</p>
+                        <h1 class="title">Momentos Únicos</h1>
+                        <p class="text-gray-700 font-bold mb-6 italic text-xl">"Nuestros mejores trofeos."</p>
+                        <p class="text-gray-500 mb-10 font-medium">Cada segundo a tu lado es una victoria que guardo con amor. Mira cómo florecen nuestros recuerdos...</p>
                         <div class="flex gap-4 justify-center">
                             <button onclick="nextPage(2)" class="btn-back px-8 py-4 rounded-full text-[11px] uppercase">Atrás</button>
                             <button onclick="nextPage(4)" class="btn-next px-10 py-4 text-white rounded-full uppercase text-[11px]">Continuar</button>
@@ -307,6 +318,7 @@
                     break;
                 case 4:
                     content = `
+                        <h1 class="title">Por siempre juntos</h1>
                         <p class="text-gray-600 mb-10 font-semibold text-xl">Gracias por ser mi mejor equipo.</p>
                         <p class="text-gray-400 mb-10 text-sm font-bold uppercase tracking-[6px]">Alexander & Noelia</p>
                         <div class="flex justify-center gap-10 text-6xl animate-bounce mb-8">
@@ -356,8 +368,14 @@
         }
 
         function toggleMute() {
-            audio.muted = !audio.muted;
-            document.getElementById('mute-icon').innerText = audio.muted ? "🔇" : "🔊";
+            if (audio.paused) {
+                audio.play();
+                audio.muted = false;
+                document.getElementById('mute-icon').innerText = "🔊";
+            } else {
+                audio.muted = !audio.muted;
+                document.getElementById('mute-icon').innerText = audio.muted ? "🔇" : "🔊";
+            }
         }
 
         window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
