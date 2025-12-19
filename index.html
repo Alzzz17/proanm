@@ -15,254 +15,180 @@
             font-family: 'Montserrat', sans-serif;
             background: linear-gradient(135deg, #ffffff 0%, #fff5f7 50%, #ffe4e8 100%);
             height: 100vh;
+            width: 100vw;
             display: flex;
             align-items: center;
             justify-content: center;
             touch-action: none; 
         }
 
-        #canvas-container {
+        #canvas-container, #photo-bg-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1;
         }
 
-        #photo-bg-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 2;
-            overflow: hidden;
-        }
+        #canvas-container { z-index: 1; }
+        #photo-bg-container { z-index: 2; overflow: hidden; }
 
         .dynamic-photo {
             position: absolute;
-            width: 280px;
-            height: 280px;
+            width: 220px;
+            height: 220px;
             object-fit: cover;
-            border-radius: 30px;
-            box-shadow: 0 15px 35px rgba(255, 77, 109, 0.2);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 77, 109, 0.15);
             opacity: 0;
-            transform: scale(0.8) translateY(20px);
+            transform: scale(0.8);
             transition: opacity 1.5s ease, transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
-            mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0) 100%);
-            -webkit-mask-image: radial-gradient(circle, black 50%, rgba(0,0,0,0) 100%);
+            mask-image: radial-gradient(circle, black 60%, rgba(0,0,0,0) 100%);
+            -webkit-mask-image: radial-gradient(circle, black 60%, rgba(0,0,0,0) 100%);
         }
 
         .dynamic-photo.visible {
-            opacity: 0.85;
-            transform: scale(1) translateY(0) rotate(var(--rotation));
-            animation: floatingSlow 8s infinite ease-in-out alternate;
-        }
-
-        @keyframes floatingSlow {
-            from { transform: scale(1) translateY(0) rotate(var(--rotation)); }
-            to { transform: scale(1.05) translateY(-20px) rotate(calc(var(--rotation) + 4deg)); }
+            opacity: 0.7;
+            transform: scale(1) rotate(var(--rotation));
         }
 
         .floating-emoji {
             position: absolute;
             user-select: none;
             will-change: transform;
-            filter: drop-shadow(0 6px 8px rgba(0,0,0,0.08));
         }
 
         .content-wrapper {
             position: relative;
             z-index: 50;
-            text-align: center;
-            width: 90%;
-            max-width: 550px;
-            pointer-events: auto;
-            padding: 50px;
-            border-radius: 60px;
-            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), 
-                        opacity 0.6s ease-out, 
-                        filter 0.6s ease-out;
-        }
-
-        .page-exit {
-            opacity: 0;
-            transform: translateY(40px) scale(0.9);
-            filter: blur(10px);
-        }
-
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.35);
+            width: 92%;
+            max-width: 500px;
+            max-height: 85vh; 
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.5);
-            box-shadow: 0 25px 50px -12px rgba(255, 77, 109, 0.2);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 35px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 0 20px 40px rgba(255, 77, 109, 0.1);
+            padding: 30px;
+            display: flex;
+            flex-direction: column; 
+            transition: all 0.5s ease;
+            overflow: hidden;
         }
 
-        #mute-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 100;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.4);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 77, 109, 0.3);
-            display: none; 
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            color: #ff4d6d;
+        /* Área de scroll para que el texto no empuje los botones */
+        .scroll-area {
+            flex: 1;
+            overflow-y: auto;
+            margin: 10px 0;
+            padding-right: 5px;
         }
+
+        .scroll-area::-webkit-scrollbar { width: 4px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: #ff4d6d55; border-radius: 10px; }
 
         .title {
             font-family: 'Caveat', cursive;
-            font-size: clamp(3.5rem, 12vw, 5.5rem);
+            font-size: clamp(2.2rem, 8vw, 3.8rem);
             color: #ff4d6d;
-            margin-bottom: 1.5rem;
-            line-height: 1;
+            text-align: center;
+            line-height: 1.1;
+            margin-bottom: 5px;
+        }
+
+        .btn-container {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin-top: auto; 
+            padding-top: 10px;
+        }
+
+        .btn-next, .btn-back {
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
         }
 
         .btn-next {
             background: #ff4d6d;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 10px 25px rgba(255, 77, 109, 0.3);
-            font-weight: 700;
-            letter-spacing: 2px;
-        }
-
-        .btn-next:hover {
-            transform: translateY(-5px) scale(1.05);
-            background: #ff3355;
+            color: white;
+            box-shadow: 0 5px 15px rgba(255, 77, 109, 0.2);
         }
 
         .btn-back {
-            background: rgba(255, 255, 255, 0.5);
+            background: white;
             color: #ff4d6d;
-            border: 1px solid rgba(255, 77, 109, 0.3);
-            transition: all 0.4s ease;
-            font-weight: 600;
+            border: 1px solid #ff4d6d22;
         }
 
-        .btn-back:hover {
-            background: rgba(255, 255, 255, 0.8);
-            transform: translateX(-5px);
+        #mute-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid #ff4d6d33;
+            display: none;
+            align-items: center;
+            justify-content: center;
         }
+
+        .page-exit { opacity: 0; transform: translateY(20px); }
     </style>
 </head>
 <body>
 
-    <!-- Asegúrate de que el archivo tu-cancion.mp3 esté en la misma carpeta que index.html en Vercel -->
+    <!-- Sección de Música Restaurada -->
     <audio id="bgMusic" preload="auto" loop>
         <source src="tu-cancion.mp3" type="audio/mpeg">
     </audio>
 
     <button id="mute-btn" onclick="toggleMute()">
-        <span id="mute-icon" style="font-size: 28px;">🔊</span>
+        <span id="mute-icon" style="color: #ff4d6d;">🔊</span>
     </button>
 
     <div id="canvas-container"></div>
     <div id="photo-bg-container"></div>
 
     <div class="content-wrapper" id="main-card">
-        <div id="page-content">
-            <h1 class="title">Bienvenida Noelia</h1>
-            <div class="max-w-[280px] mx-auto flex flex-col items-center gap-5">
-                <input type="text" id="nameInput" placeholder="Escribe mi nombre..." 
-                       class="w-full px-7 py-4 rounded-3xl text-center text-gray-700 shadow-sm border-2 border-transparent outline-none focus:border-[#ff4d6d] transition-all">
-                <p id="errorMessage" class="text-[#ff4d6d] font-bold text-sm hidden">¡Ese no es mi nombre! ❤️</p>
-                <button onclick="checkName()" class="btn-next px-14 py-4 text-white rounded-full uppercase text-[12px]">
-                    Entrar
-                </button>
-            </div>
+        <div id="page-content" class="h-full flex flex-col overflow-hidden">
+            <!-- Cargado por JS -->
         </div>
     </div>
 
     <script>
-        const emojis = ['❤️', '⚽', '🏐', '🏸', '🎮'];
-        const container = document.getElementById('canvas-container');
+        const emojis = ['❤️', '⚽', '🏐', '🎮', '✨'];
         const photoContainer = document.getElementById('photo-bg-container');
         const audio = document.getElementById('bgMusic');
         const mainCard = document.getElementById('main-card');
         const muteBtn = document.getElementById('mute-btn');
-        const particles = [];
-        const mouse = { x: -1000, y: -1000 };
-        
-        // --- CONFIGURACIÓN DE TUS FOTOS ---
         const misFotos = ["foto1.png", "foto2.png", "foto3.png", "foto4.png", "foto5.png"];
         let photoInterval;
-
-        function init() {
-            for (let i = 0; i < 20; i++) {
-                const p = {
-                    x: Math.random() * window.innerWidth,
-                    y: Math.random() * window.innerHeight,
-                    vx: (Math.random() - 0.5) * 0.8,
-                    vy: (Math.random() - 0.5) * 0.8,
-                    size: 30 + Math.random() * 30,
-                    emoji: emojis[Math.floor(Math.random() * emojis.length)],
-                    element: document.createElement('div'),
-                    currX: 0, currY: 0
-                };
-                p.element.innerText = p.emoji;
-                p.element.className = 'floating-emoji';
-                p.element.style.fontSize = `${p.size}px`;
-                container.appendChild(p.element);
-                particles.push(p);
-            }
-        }
-
-        function animate() {
-            particles.forEach(p => {
-                p.x += p.vx; p.y += p.vy;
-                if (p.x < -100) p.x = window.innerWidth + 50;
-                if (p.x > window.innerWidth + 100) p.x = -50;
-                if (p.y < -100) p.y = window.innerHeight + 50;
-                if (p.y > window.innerHeight + 100) p.y = -50;
-
-                const dx = p.x - mouse.x, dy = p.y - mouse.y;
-                const dist = Math.sqrt(dx*dx + dy*dy);
-                let tx = p.x, ty = p.y;
-                if (dist < 200) {
-                    const angle = Math.atan2(dy, dx);
-                    tx += Math.cos(angle) * (200 - dist) * 0.5;
-                    ty += Math.sin(angle) * (200 - dist) * 0.5;
-                }
-                p.currX += (tx - p.currX) * 0.1;
-                p.currY += (ty - p.currY) * 0.1;
-                p.element.style.transform = `translate3d(${p.currX}px, ${p.currY}px, 0)`;
-            });
-            requestAnimationFrame(animate);
-        }
 
         function checkName() {
             const val = document.getElementById('nameInput').value.trim().toLowerCase();
             if (val === "alexander") {
-                // Intento de reproducción con manejo de errores para Vercel
                 if (audio) { 
-                    audio.volume = 0.3; 
-                    const playPromise = audio.play();
-                    if (playPromise !== undefined) {
-                        playPromise.then(_ => {
-                            // Reproducción exitosa
-                            muteBtn.style.display = "flex";
-                        }).catch(error => {
-                            // Si falla, mostramos el botón de todos modos para que el usuario pueda darle play manual
-                            console.log("Autoplay bloqueado o archivo no encontrado.");
-                            muteBtn.style.display = "flex";
-                            document.getElementById('mute-icon').innerText = "🔇";
-                            audio.muted = true;
-                        });
-                    }
+                    audio.volume = 0.4; // Ajusta el volumen aquí
+                    audio.play().then(() => { 
+                        muteBtn.style.display = "flex"; 
+                    }).catch(() => { 
+                        muteBtn.style.display = "flex"; 
+                    });
                 }
                 nextPage(2);
             } else {
-                document.getElementById('errorMessage').style.display = 'block';
+                document.getElementById('errorMessage').classList.remove('hidden');
             }
         }
 
@@ -271,13 +197,10 @@
             setTimeout(() => {
                 renderPage(num);
                 mainCard.classList.remove('page-exit');
-            }, 600);
+            }, 400);
         }
 
         function renderPage(num) {
-            if (num > 1) mainCard.classList.add('glass-effect');
-            else mainCard.classList.remove('glass-effect');
-            
             if (num === 3) startPhotoDynamic();
             else stopPhotoDynamic();
 
@@ -285,52 +208,56 @@
             switch(num) {
                 case 1:
                     content = `
-                        <h1 class="title">Bienvenida mi amor</h1>
-                        <div class="max-w-[280px] mx-auto flex flex-col items-center gap-5">
+                        <h1 class="title">Bienvenida Noelia</h1>
+                        <div class="flex-1 flex flex-col justify-center items-center gap-4">
                             <input type="text" id="nameInput" placeholder="Escribe mi nombre..." 
-                                   class="w-full px-7 py-4 rounded-3xl text-center text-gray-700 shadow-sm border-2 border-transparent outline-none focus:border-[#ff4d6d] transition-all">
-                            <button onclick="checkName()" class="btn-next px-14 py-4 text-white rounded-full uppercase text-[12px]">
-                                Entrar
-                            </button>
-                        </div>
-                    `;
+                                   class="w-full max-w-[250px] px-6 py-3 rounded-2xl text-center border-2 border-pink-50 outline-none focus:border-[#ff4d6d] transition-all">
+                            <p id="errorMessage" class="text-[#ff4d6d] font-bold text-xs hidden">¡Ese no es mi nombre! ❤️</p>
+                            <button onclick="checkName()" class="btn-next">Entrar</button>
+                        </div>`;
                     break;
                 case 2:
                     content = `
-                        <h1 class="title">Desde que llegaste...</h1>
-                        <p class="text-gray-600 mb-10 leading-relaxed font-medium text-lg">Bueno, mi amor, todo empezó cuando te conocí en un servidor de Minecraft, sin imaginar que con el tiempo te convertirías en todo esto que hoy significas para mí. Jamás pensé que algo tan simple terminaría siendo tan importante en mi vida.
-                            La verdad es que me siento muy feliz de haberte conocido. Poco a poco te fuiste convirtiendo en una persona muy especial y muy importante para mí, alguien que llegó sin hacer ruido y se quedó en mi corazón. Cada conversación, cada risa, cada momento compartido fue haciendo que el cariño creciera sin que me diera cuenta.
-                            Contigo aprendí que no importa el lugar ni la forma, lo que realmente importa es cómo alguien te hace sentir. Aunque todo haya empezado en un videojuego, lo que siento por ti es real, sincero y profundo. Cuando jugamos juntos no solo compartimos una partida, compartimos tiempo, confianza y emociones que valoro muchísimo.
-                            Me encanta cómo me haces sentir, cómo siempre encuentro paz, alegría y emoción cuando estoy contigo. Eres esa persona con la que quiero estar, con la que quiero jugar, hablar y compartir cada momento. Si no es contigo, simplemente no es igual.
-                            Gracias por llegar a mi vida de una forma tan inesperada y por quedarte. Gracias por ser tú, por hacerme feliz y por convertir algo tan simple en algo tan especial. Espero de corazón que sigamos creando muchos más momentos juntos, porque a tu lado todo se siente mejor.</p>
-                        <div class="flex gap-4 justify-center">
-                            <button onclick="nextPage(1)" class="btn-back px-8 py-4 rounded-full text-[11px] uppercase">Atrás</button>
-                            <button onclick="nextPage(3)" class="btn-next px-10 py-4 text-white rounded-full uppercase text-[11px]">Recuerdos</button>
+                        <h1 class="title">Nuestra Historia</h1>
+                        <div class="scroll-area">
+                            <p class="text-gray-700 text-sm leading-relaxed">
+                                Bueno, mi amor, todo empezó cuando te conocí en un servidor de Minecraft(Comugamers Gracias), sin imaginar que con el tiempo te convertirías en todo esto que hoy significas para mí. Jamás pensé que algo tan simple terminaría siendo tan importante en mi vida.<br><br>
+                                La verdad es que me siento muy feliz de haberte conocido. Poco a poco te fuiste convirtiendo en una persona muy especial y muy importante para mí, alguien que llegó sin hacer ruido y se quedó en mi corazón. Cada conversación, cada risa, cada momento compartido fue haciendo que el cariño creciera sin que me diera cuenta.<br><br>
+                                Contigo aprendí que no importa el lugar ni la forma, lo que realmente importa es cómo alguien te hace sentir. Aunque todo haya empezado en un videojuego, lo que siento por ti es real, sincero y profundo. Cuando jugamos juntos no solo compartimos una partida, compartimos tiempo, confianza y emociones que valoro muchísimo.<br><br>
+                                Me encanta cómo me haces sentir, cómo siempre encuentro paz, alegría y emoción cuando estoy contigo. Eres esa persona con la que quiero estar, con la que quiero jugar, hablar y compartir cada momento. Si no es contigo, simplemente no es igual.
+                            </p>
                         </div>
-                    `;
+                        <div class="btn-container">
+                            <button onclick="nextPage(1)" class="btn-back">Atrás</button>
+                            <button onclick="nextPage(3)" class="btn-next">Recuerdos</button>
+                        </div>`;
                     break;
                 case 3:
                     content = `
-                        <h1 class="title">Momentos....</h1>
-                        <p class="text-gray-500 mb-10 font-medium">Cada momento juntos, cada vez que jugamos, se vuelve algo muy especial para mí. Estar a tu lado se ha vuelto algo tan bonito, tan necesario. Cuando estoy contigo, no quiero nada más que eso: estar contigo, sentirte cerca.
-                            Tal vez ahora todo sea a través de un videojuego, pero como tú dices, cuando jugamos me siento más cerca de ti, y tienes razón, mi amor, yo también siento lo mismo. Desde el principio siempre buscaba la forma de jugar contigo, de pasar tiempo a tu lado, y eso me hacía muy feliz.
-                            Saber que tú también buscabas lo mismo me llena el corazón, y te lo digo porque yo también lo sentía, amor, lo sentía de verdad. Espero que esas ganas nunca se terminen. Eres la única persona con la que me entiendo, con la que siempre quiero jugar. Si no es contigo, no es con nadie… con nadie.</p>
-                        <div class="flex gap-4 justify-center">
-                            <button onclick="nextPage(2)" class="btn-back px-8 py-4 rounded-full text-[11px] uppercase">Atrás</button>
-                            <button onclick="nextPage(4)" class="btn-next px-10 py-4 text-white rounded-full uppercase text-[11px]">Continuar</button>
+                        <h1 class="title">Momentos...</h1>
+                        <div class="scroll-area">
+                            <p class="text-gray-700 text-sm leading-relaxed">
+                                Cada momento juntos, cada vez que jugamos, se vuelve algo muy especial para mí. Estar a tu lado se ha vuelto algo tan bonito, tan necesario. Cuando estoy contigo, no quiero nada más que eso: estar contigo, sentirte cerca.<br><br>
+                                Tal vez ahora todo sea a través de un videojuego, pero como tú dices, cuando jugamos me siento más cerca de ti, y tienes razón, mi amor, yo también siento lo mismo. Desde el principio siempre buscaba la forma de jugar contigo, de pasar tiempo a tu lado, y eso me hacía muy feliz.<br><br>
+                                Saber que tú también buscabas lo mismo me llena el corazón, y te lo digo porque yo también lo sentía, amor, lo sentía de verdad. Espero que esas ganas nunca se terminen. Eres la única persona con la que me entiendo, con la que siempre quiero jugar. Si no es contigo, no es con nadie… con nadie.
+                            </p>
                         </div>
-                    `;
+                        <div class="btn-container">
+                            <button onclick="nextPage(2)" class="btn-back">Atrás</button>
+                            <button onclick="nextPage(4)" class="btn-next">Continuar</button>
+                        </div>`;
                     break;
                 case 4:
                     content = `
-                        <h1 class="title">Por siempre juntos</h1>
-                        <p class="text-gray-600 mb-10 font-semibold text-xl">Gracias por ser mi mejor equipo.</p>
-                        <p class="text-gray-400 mb-10 text-sm font-bold uppercase tracking-[6px]">Alexander & Noelia</p>
-                        <div class="flex justify-center gap-10 text-6xl animate-bounce mb-8">
-                            <span>❤️</span>
+                        <h1 class="title">Por siempre</h1>
+                        <div class="flex-1 flex flex-col justify-center items-center text-center">
+                            <p class="text-gray-600 font-semibold mb-2">Gracias por ser mi mejor equipo.</p>
+                            <p class="text-[#ff4d6d] font-bold text-lg tracking-widest mb-6">ALEXANDER & NOELIA</p>
+                            <div class="text-5xl animate-bounce">❤️</div>
                         </div>
-                        <button onclick="nextPage(3)" class="btn-back px-8 py-4 rounded-full text-[11px] uppercase">Volver a fotos</button>
-                    `;
+                        <div class="btn-container">
+                            <button onclick="nextPage(3)" class="btn-back">Volver a fotos</button>
+                        </div>`;
                     break;
             }
             document.getElementById('page-content').innerHTML = content;
@@ -338,7 +265,7 @@
 
         function startPhotoDynamic() {
             if (photoInterval) return;
-            photoInterval = setInterval(spawnPhoto, 3500);
+            photoInterval = setInterval(spawnPhoto, 3000);
             spawnPhoto();
         }
 
@@ -350,43 +277,57 @@
 
         function spawnPhoto() {
             const img = document.createElement('img');
-            const photoSrc = misFotos[Math.floor(Math.random() * misFotos.length)];
-            img.src = photoSrc;
-            img.onerror = () => img.src = `https://picsum.photos/seed/${Math.random()}/500/500`;
+            img.src = misFotos[Math.floor(Math.random() * misFotos.length)];
+            img.onerror = () => img.src = `https://picsum.photos/seed/${Math.random()}/300/300`;
             img.className = 'dynamic-photo';
             
             const isLeft = Math.random() > 0.5;
-            const isTop = Math.random() > 0.5;
-            let x = isLeft ? Math.random() * 20 : 75 + Math.random() * 10;
-            let y = isTop ? Math.random() * 25 : 70 + Math.random() * 15;
-            
-            img.style.left = `${x}%`;
-            img.style.top = `${y}%`;
-            img.style.setProperty('--rotation', `${(Math.random() - 0.5) * 20}deg`);
+            img.style.left = isLeft ? `${Math.random() * 10}%` : `${80 + Math.random() * 5}%`;
+            img.style.top = `${Math.random() * 70}%`;
+            img.style.setProperty('--rotation', `${(Math.random() - 0.5) * 30}deg`);
             
             photoContainer.appendChild(img);
             setTimeout(() => img.classList.add('visible'), 100);
             setTimeout(() => {
                 img.classList.remove('visible');
                 setTimeout(() => img.remove(), 2000);
-            }, 6000);
+            }, 5000);
         }
 
         function toggleMute() {
-            if (audio.paused) {
-                audio.play();
-                audio.muted = false;
-                document.getElementById('mute-icon').innerText = "🔊";
-            } else {
-                audio.muted = !audio.muted;
-                document.getElementById('mute-icon').innerText = audio.muted ? "🔇" : "🔊";
-            }
+            audio.muted = !audio.muted;
+            document.getElementById('mute-icon').innerText = audio.muted ? "🔇" : "🔊";
         }
 
-        window.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-        window.addEventListener('touchstart', e => { mouse.x = e.touches[0].clientX; mouse.y = e.touches[0].clientY; });
+        renderPage(1);
 
-        init(); animate();
+        function createParticles() {
+            const container = document.getElementById('canvas-container');
+            for(let i=0; i<12; i++){
+                const div = document.createElement('div');
+                div.innerText = emojis[Math.floor(Math.random()*emojis.length)];
+                div.className = 'floating-emoji opacity-20';
+                div.style.left = Math.random()*100 + 'vw';
+                div.style.top = Math.random()*100 + 'vh';
+                div.style.fontSize = (15 + Math.random()*20) + 'px';
+                container.appendChild(div);
+                
+                let x = Math.random()*2 - 1;
+                let y = Math.random()*2 - 1;
+                
+                function move() {
+                    let top = parseFloat(div.style.top);
+                    let left = parseFloat(div.style.left);
+                    if(top < -10) top = 110; if(top > 110) top = -10;
+                    if(left < -10) left = 110; if(left > 110) left = -10;
+                    div.style.top = (top + y*0.1) + 'vh';
+                    div.style.left = (left + x*0.1) + 'vw';
+                    requestAnimationFrame(move);
+                }
+                move();
+            }
+        }
+        createParticles();
     </script>
 </body>
 </html>
